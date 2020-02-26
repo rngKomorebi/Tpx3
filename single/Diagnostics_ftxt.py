@@ -5,17 +5,18 @@ import os # for folder manipulations
 import os.path
 import numpy as np
 import matplotlib.pyplot as plt
+from path_to_shot import *
 # Plot figures in external window:
 from IPython import get_ipython
 get_ipython().run_line_magic('matplotlib', 'qt')
 
-shot = input("Shot number:")
+shot = int(input("Shot number:"))
 
+# Go to the @shot folder
 try:
-    os.chdir(shot)
+    path = path_to_shot(shot)
 except:
-    print("No folder, no data")
-    quit()
+    raise SystemExit
 
 # =============================================================================
 # Check and read the data from the tokamak's diagnostics
@@ -178,11 +179,11 @@ ax7.legend(loc="upper left")
 
 # Go to the Figures folder
 try:
-    os.chdir("Figures")
+    os.chdir("%s/Figures" % path)
 except:
     print("No folder, creating one")
-    os.mkdir("Figures")
-    os.chdir("Figures")
+    os.mkdir("%s/Figures" % path)
+    os.chdir("%s/Figures" % path)
 
 fig.set_size_inches(20., 12., forward=True)
 plt.savefig('%s:C_diagnostics.pdf' % shot)
