@@ -6,6 +6,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import csv
 import time
 from path_to_shot import *
 start_time = time.time() # Execution time
@@ -16,19 +17,26 @@ get_ipython().run_line_magic('matplotlib', 'qt')
 shot = int(input("Shot number:"))
 
 # Go to the @shot folder
-path = path_to_shot(shot)
+try:
+    path = path_to_shot(shot)
+except:
+    raise SystemExit
 
 # Get the data
-
 Data_tpx3_cent = np.genfromtxt('%s.csv' % shot, delimiter=',')
+# Read the first row in the .csv file and get index of the required signal
+with open('%s.csv' % shot, newline='') as f:
+    reader = csv.reader(f)
+    row1 = next(reader) 
 
 try:
-    cent = np.array([row[8] for row in Data_tpx3_cent])
-    time_new = np.array([row[4] for row in Data_tpx3_cent]) * 25/4096/1e6
-    tot = np.array([row[6] for row in Data_tpx3_cent])
+    index1 = row1.index('#ToA')
+    index2 = row1.index('#ToTtotal[arb]')
+    time_new = np.array([row[index1] for row in Data_tpx3_cent]) * 25/4096/1e6
+    tot = np.array([row[index2] for row in Data_tpx3_cent])
 except:
-    time_new = np.array([row[2] for row in Data_tpx3_cent]) * 25/4096/1e6
-    tot = np.array([row[4] for row in Data_tpx3_cent])
+    print("No 'ToA' or 'ToT' in the list")
+    raise SystemExit
 
 bins1 = np.arange(time_new[0], time_new[-1], 1.5625)
 bins2 = np.arange(0, 25000, 25)
@@ -47,8 +55,12 @@ for i in range (0, len(ones)):
     data[ones[i]] = 0
 
 # Define the range limits for the appropriate plot
-l_lim, r_lim = int(np.nonzero(data)[0][0]), int(np.nonzero(data)[0][-1])
-left, right = timee[l_lim]-10, timee[r_lim]+10
+try:
+    l_lim, r_lim = int(np.nonzero(data)[0][0]), int(np.nonzero(data)[0][-1])
+    left, right = timee[l_lim]-10, timee[r_lim]+10
+except:
+    print("Could not compute 'left' and 'right'")
+
 y, x = np.meshgrid(yedges,xedges)
 
 data_masked = np.ma.masked_where(H == 0, H)
@@ -60,7 +72,10 @@ data_masked = np.ma.masked_where(H == 0, H)
 fig = plt.figure()
 fig1 = plt.gca()
 plt.rcParams.update({'font.size': 16})
-plt.xlim(left, right)
+try:
+    plt.xlim(left, right)
+except:
+    pass
 yticks = fig1.yaxis.get_major_ticks() 
 yticks[0].label1.set_visible(False)
 # plt.pcolormesh(x, y, H)

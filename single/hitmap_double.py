@@ -5,6 +5,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import csv
 from path_to_shot import *
 # Plot figures in external window:
 from IPython import get_ipython
@@ -13,20 +14,28 @@ get_ipython().run_line_magic('matplotlib', 'qt')
 shot = int(input("Shot number:"))
 
 # Go to the @shot folder
-path = path_to_shot(shot)
-
-# Get data from the .csv file
-Data_tpx3_cent = np.genfromtxt('%s.csv'% shot, delimiter=',')
-
-# Row and col coordinates, cent = cluster size
 try:
-    col_total = np.array([row[2] for row in Data_tpx3_cent])
-    row_total = np.array([row[3] for row in Data_tpx3_cent])
-    cent = np.array([row[8] for row in Data_tpx3_cent])
+    path = path_to_shot(shot)
 except:
-    col_total = np.array([row[0] for row in Data_tpx3_cent])
-    row_total = np.array([row[1] for row in Data_tpx3_cent])
-    cent = np.array([row[5] for row in Data_tpx3_cent])
+    raise SystemExit
+
+# Get the data
+Data_tpx3_cent = np.genfromtxt('%s.csv' % shot, delimiter=',')
+# Read the first row in the .csv file and get index of the required signal
+with open('%s.csv' % shot, newline='') as f:
+    reader = csv.reader(f)
+    row1 = next(reader) 
+
+try:
+    index1 = row1.index('#Col')
+    index2 = row1.index('#Row')
+    index3 = row1.index('#Centroid')
+    col_total = np.array([row[index1] for row in Data_tpx3_cent])
+    row_total = np.array([row[index2] for row in Data_tpx3_cent])
+    cent = np.array([row[index3] for row in Data_tpx3_cent])
+except:
+    print("No 'ToA' in the list")
+    raise SystemExit
 
 # Prepare arrays for the cluster separation
 col_ones = np.zeros(len(col_total))

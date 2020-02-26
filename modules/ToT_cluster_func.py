@@ -5,21 +5,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import csv
 from modules.path_to_shot import *
 
 def ToT_cluster(shot):
     # Go to the @shot folder
-    path = path_to_shot(shot)
+    try:
+        path = path_to_shot(shot)
+    except:
+        raise SystemExit
     
-    # Get the data from the .csv file
+    # Get the data
     Data_tpx3_cent = np.genfromtxt('%s.csv' % shot, delimiter=',')
+    # Read the first row in the .csv file and get index of the required signal
+    with open('%s.csv' % shot, newline='') as f:
+        reader = csv.reader(f)
+        row1 = next(reader) 
     
     try:
-        cent = np.array([row[8] for row in Data_tpx3_cent]) # Clusters
-        tot_total = np.array([row[6] for row in Data_tpx3_cent]) # Total ToT
+        index1 = row1.index('#ToTtotal[arb]')
+        index2 = row1.index('#Centroid')
+        tot_total = np.array([row[index1] for row in Data_tpx3_cent]) # Total ToT
+        cent = np.array([row[index2] for row in Data_tpx3_cent])
     except:
-        cent = np.array([row[5] for row in Data_tpx3_cent]) # Clusters
-        tot_total = np.array([row[4] for row in Data_tpx3_cent]) # Total ToT
+        print("No 'ToA' in the list")
+        raise SystemExit
     
     
     # Prepare empty arrays for the indices of particular clusters
