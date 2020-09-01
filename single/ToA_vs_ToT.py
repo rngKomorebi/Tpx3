@@ -49,7 +49,7 @@ timee = a[1]
 data = a[0]
 
 # Get rid off the noisy "ones" for an appropriate plot
-ones = np.where(data == 1)[0]
+ones = np.where(data <= 10)[0]
 
 for i in range (0, len(ones)):
     data[ones[i]] = 0
@@ -64,6 +64,7 @@ except:
 y, x = np.meshgrid(yedges,xedges)
 
 data_masked = np.ma.masked_where(H == 0, H)
+# data_masked1 = np.log(data_masked)
 
 # =============================================================================
 # Plot
@@ -71,7 +72,7 @@ data_masked = np.ma.masked_where(H == 0, H)
 
 fig = plt.figure()
 fig1 = plt.gca()
-plt.rcParams.update({'font.size': 16})
+plt.rcParams.update({'font.size': 22})
 try:
     plt.xlim(left, right)
 except:
@@ -80,10 +81,11 @@ yticks = fig1.yaxis.get_major_ticks()
 yticks[0].label1.set_visible(False)
 # plt.pcolormesh(x, y, H)
 plt.pcolormesh(x, y, data_masked)
-plt.colorbar(label="Hits")
+# plt.imshow(data_masked, cmap=mpl.cm.jet, norm=mpl.colors.LogNorm)
+plt.colorbar(label="Hits [-]")
 plt.title("Shot %s: ToT vs ToA" % shot)
-plt.xlabel("ToA, [ms]")
-plt.ylabel("ToT, [a.u.]")
+plt.xlabel("ToA [ms]")
+plt.ylabel("ToT [a.u.]")
 
 # Go to the Figures folder
 try:

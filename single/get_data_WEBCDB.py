@@ -10,21 +10,21 @@ import os # for folder manipulations
 from selenium import webdriver # to get to the web
 from selenium.webdriver.common.keys import Keys
 import os.path
+from path_to_shot import *
 import numpy as np
 
 pyautogui.PAUSE = 1
 pyautogui.FAILSAFE = True
 
-shot = input("Shot number:")
-# Check if the folder exists. If no: create one
-try:
-    os.mkdir(shot)
-except Exception:
-    pass
-# Go to that folder
-os.chdir(shot)
+shot = int(input("Shot number:"))
 
-# Urls and datafiles: 1-current, 2-HXR, 3-SXR, 4-neutrons, 5-gas
+# Go to the @shot folder
+try:
+    path = path_to_shot(shot)
+except:
+    raise SystemExit
+
+# Urls and datafiles: 1-current, 2-HXR, 3-SXR, 4-neutrons, 5-gas puff
 url1 = 'https://webcdb.tok.ipp.cas.cz/data_signals/728/%s/data?variant=&revision=1&downsample=100' % (shot)
 url2 = 'https://webcdb.tok.ipp.cas.cz/data_signals/1266/%s/data?variant=&revision=1&downsample=100' % (shot)
 url3 = 'https://webcdb.tok.ipp.cas.cz/data_signals/1195/%s/data?variant=&revision=1&downsample=100' % (shot)
@@ -43,7 +43,7 @@ no_file_index_full = np.zeros(5)
 
 # Change Chrome download folder to the current one @ shot
 chrome_options = webdriver.ChromeOptions()
-prefs = {'download.default_directory' : '/home/sjo/Documents/daisuki/COMPASS/RE_27.1.2020/%s' % (shot)}
+prefs = {'download.default_directory' : path}
 chrome_options.add_experimental_option('prefs', prefs)
 
 # Check, if the file exists. If no - go to the web, log in, download the file
@@ -61,9 +61,9 @@ if j > 0:
     driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver", chrome_options=chrome_options)
     driver.get('https://webcdb.tok.ipp.cas.cz/')
     time.sleep(2)
-    pyautogui.typewrite('login')
+    pyautogui.typewrite('kulkov')
     pyautogui.typewrite('\t')
-    pyautogui.typewrite('password')
+    pyautogui.typewrite('nejakejTenVUL168')
     pyautogui.typewrite('\t')
     pyautogui.typewrite('\t')
     pyautogui.typewrite('\r')

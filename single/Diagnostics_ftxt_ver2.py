@@ -83,6 +83,26 @@ try:
     limits = np.where(np.diff(np.sign(current_data)) != 0 )[0] +1
 except:
     pass
+
+# =============================================================================
+# Check, if current is negative or positive (depending on the direction)
+# =============================================================================
+# current_data1 = current_data[limits[0]:limits[1]]
+current_data1 = current_data[9000:20000]
+
+
+current_min = min(current_data1)
+current_max = max(current_data1)
+
+if current_min > 0 and current_max > 0:
+    current_data_fin = current_data
+elif current_min < 0 and current_max < 0:
+    current_data_fin = current_data*-1
+elif current_max > 0 and current_min < 0:
+    if current_min*-1 > current_max:
+        current_data_fin = current_data*-1
+    else:
+        current_data_fin = current_data
 # =============================================================================
 # Plot
 # =============================================================================
@@ -106,7 +126,7 @@ if left is None:
 if Data_current_all is not None:
     ax1 = fig.add_subplot(221)
     ax1.set_xlim(left,right)
-    ax1.plot(current_time, current_data/1e3*-1, color='red', label="current")
+    ax1.plot(current_time, current_data_fin/1e3, color='red', label="current")
     ax2 = ax1.twinx()
     ax2.axes.get_yaxis().set_ticks([])
     ax2.plot(gas_time, gas_data, color='orange', label="gaspuff")
@@ -186,5 +206,5 @@ except:
     os.chdir("%s/Figures" % path)
 
 fig.set_size_inches(20., 12., forward=True)
-# plt.savefig('%s:C_diagnostics.pdf' % shot)
+plt.savefig('%s:C_diagnostics_.pdf' % shot)
 plt.show()

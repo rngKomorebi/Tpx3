@@ -103,7 +103,7 @@ for j in range (0, len(fives)):
     
 # Prepair a tuple of arrays filled with ToT clusters for stacked histogram
 tot_multi = [ones_tot, twos_tot, threes_tot, fours_tot, fives_tot]
-labels = ['1', '2', '3', '4', '5']
+labels = ['1', '2', '3', '4', '$\geq$5']
 
 # To add some text to the legend
 empty = np.zeros(len(tot_multi))
@@ -113,12 +113,12 @@ empty = np.zeros(len(tot_multi))
 # =============================================================================
 
 fig = plt.figure()
-plt.rcParams.update({'font.size': 16})
+plt.rcParams.update({'font.size': 22})
 plt.title("Shot %s: ToT by clusters" % shot)
-plt.xlabel("ToT, [a.u.]")
-plt.ylabel("Hits, [a.u.]")
+plt.xlabel("ToT [a.u.]")
+plt.ylabel("Hits [-]")
 plt.plot(empty, color = 'white', label="Cluster size:")
-plt.hist(tot_multi, 1000, (0, 25000), histtype='step', stacked=True, fill=True, label = labels)
+plt.hist(tot_multi, 1000, (0, 25000), histtype='step', stacked=True, fill=False, label = labels)
 plt.legend()
 
 # Time spent for the code execution

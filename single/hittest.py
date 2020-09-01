@@ -57,8 +57,8 @@ for i in range (0, len(col_total)):
         row_noones[i] = row_total[i]
 
 # Compute histograms: H - all data, H1 - with particular cluster size
-# H, xedges, yedges = np.histogram2d(row_total, col_total, 256, [[0,255],[0,255]])
 H, xedges, yedges = np.histogram2d(row_total, col_total, 256, [[0,255],[0,255]])
+H3, xedges, yedges = np.histogram2d(row_total, col_total, 50, [[145,195],[115,165]])
 H1, xedges1, yedges1 = np.histogram2d(row_ones, col_ones, 256, [[0,255],[0,255]])
 H2, xedges2, xedges2 = np.histogram2d(row_noones, col_noones, 256, [[0,255],[0,255]])
 
@@ -89,43 +89,43 @@ vmax = np.max(H)
 
 fig, axes = plt.subplots(2,3)
 fig.subplots_adjust(hspace=0.6, wspace=0.6)
-plt.rcParams.update({'font.size': 22})
+plt.rcParams.update({'font.size': 16})
 
 fig1 = axes[0,0].imshow(H_masked, interpolation='none', origin='low', vmin=vmin,vmax=vmax)
 fig.colorbar(fig1, ax=axes[0,0], label="Hits", fraction=0.046, pad=0.04)
 axes[0,0].set_title("Shot %s: Hitmap" % shot)
-axes[0,0].set_xlabel("Pixels, x axis [-]")
-axes[0,0].set_ylabel("Pixels, y axis [-]")
+axes[0,0].set_xlabel("Pixels, x axis")
+axes[0,0].set_ylabel("Pixels, y axis")
 
 fig2 = axes[0,1].imshow(H1_masked, interpolation='none', origin='low', vmin=vmin,vmax=vmax)
 fig.colorbar(fig2, ax=axes[0,1], label="Hits", fraction=0.046, pad=0.04)
 axes[0,1].set_title("Hitmap, cluster=1")
-axes[0,1].set_xlabel("Pixels, x axis [-]")
-axes[0,1].set_ylabel("Pixels, y axis [-]")
+axes[0,1].set_xlabel("Pixels, x axis")
+axes[0,1].set_ylabel("Pixels, y axis")
 
 fig3 = axes[0,2].imshow(H2_masked, interpolation='none', origin='low', vmin=vmin,vmax=vmax)
 fig.colorbar(fig3, ax=axes[0,2], label="Hits", fraction=0.046, pad=0.04)
 axes[0,2].set_title("Hitmap, cluster>1")
-axes[0,2].set_xlabel("Pixels, x axis [-]")
-axes[0,2].set_ylabel("Pixels, y axis [-]")
+axes[0,2].set_xlabel("Pixels, x axis")
+axes[0,2].set_ylabel("Pixels, y axis")
 
 fig4 = axes[1,0].imshow(H__masked, interpolation='none', origin='low', vmin=vmin,vmax=vmax)
 fig.colorbar(fig4, ax=axes[1,0], label="Hits", fraction=0.046, pad=0.04)
 axes[1,0].set_title("Hitmap")
-axes[1,0].set_xlabel("Pixels, x axis [-]")
-axes[1,0].set_ylabel("Pixels, y axis [-]")
+axes[1,0].set_xlabel("Pixels, x axis")
+axes[1,0].set_ylabel("Pixels, y axis")
 
 fig5 = axes[1,1].imshow(H_1_masked, interpolation='none', origin='low', vmin=vmin,vmax=vmax)
 fig.colorbar(fig5, ax=axes[1,1], label="Hits", fraction=0.046, pad=0.04)
 axes[1,1].set_title("Hitmap, cluster=1")
-axes[1,1].set_xlabel("Pixels, x axis [-]")
-axes[1,1].set_ylabel("Pixels, y axis [-]")
+axes[1,1].set_xlabel("Pixels, x axis")
+axes[1,1].set_ylabel("Pixels, y axis")
 
 fig6 = axes[1,2].imshow(H_2_masked, interpolation='none', origin='low', vmin=vmin,vmax=vmax)
 fig.colorbar(fig6, ax=axes[1,2], label="Hits", fraction=0.046, pad=0.04)
 axes[1,2].set_title("Hitmap, cluster>1")
-axes[1,2].set_xlabel("Pixels, x axis [-]")
-axes[1,2].set_ylabel("Pixels, y axis [-]")
+axes[1,2].set_xlabel("Pixels, x axis")
+axes[1,2].set_ylabel("Pixels, y axis")
 
 # Go to the Figures folder
 try:

@@ -28,27 +28,14 @@ with open('%s.csv' % shot, newline='') as f:
     reader = csv.reader(f)
     row1 = next(reader) 
 
-# try:
-#     index1 = row1.index('#ToA')
-#     index2 = row1.index('#Centroid')
-#     time_new = np.array([row[index1] for row in Data_tpx3_cent]) * 25/4096/1e6
-#     cent = np.array([row[index2] for row in Data_tpx3_cent])
-# except:
-#     print("No 'ToA' in the list")
-#     raise SystemExit
-
 try:
-    index = row1.index('#Trig-ToA[arb]')
+    index1 = row1.index('#ToA')
     index2 = row1.index('#Centroid')
-    time_new = np.array([row[index] for row in Data_tpx3_cent]) * 25/4096/1e6 + 912
+    time_new = np.array([row[index1] for row in Data_tpx3_cent]) * 25/4096/1e6
     cent = np.array([row[index2] for row in Data_tpx3_cent])
-    p=1
 except:
-    print("No 'Trig-ToA' in the list")
-    index = row1.index('#ToA')
-    index2 = row1.index('#Centroid')
-    time_new = np.array([row[index] for row in Data_tpx3_cent]) * 25/4096/1e6
-    cent = np.array([row[index2] for row in Data_tpx3_cent])
+    print("No 'ToA' in the list")
+    raise SystemExit
 
 # Define the bins with the step of 1.5625
 bins1 = np.arange(time_new[0], time_new[-1], 1.5625)
@@ -123,18 +110,18 @@ for j in range (0, len(fives)):
     
 # Prepair a tuple of arrays filled with toa clusters for stacked histogram
 toa_multi = [ones_toa, twos_toa, threes_toa, fours_toa, fives_toa]
-labels = ['1', '2', '3', '4', '$\geq$5']
+labels = ['1', '2', '3', '4', '5']
 
 bins = int((time_new[-1] - time_new[0]) / 1.5625)
 empty = np.zeros(len(time_new))
 
 fig = plt.figure()
-plt.rcParams.update({'font.size': 22})
+plt.rcParams.update({'font.size': 16})
 plt.title("Shot %s: ToA by clusters" % shot)
-plt.xlabel("Time [ms]")
-plt.ylabel("Hits [-]")
+plt.xlabel("Time, [ms]")
+plt.ylabel("Hits, [a.u.]")
 plt.plot(empty, color = 'white', label="Cluster size:")
-a = plt.hist(toa_multi, bins, (time_new[0], time_new[-1]), histtype='step', stacked=True, fill=False, label = labels)
+a = plt.hist(toa_multi, bins, (time_new[0], time_new[-1]), histtype='step', stacked=True, fill=True, label = labels)
 
 try: data = a[0][0]
 except: data = None

@@ -27,24 +27,13 @@ with open('%s.csv' % shot, newline='') as f:
     reader = csv.reader(f)
     row1 = next(reader) 
 
-# try:
-#     index = row1.index('#ToA')
-#     time_new = np.array([row[index] for row in Data_tpx3_cent]) * 25/4096/1e6
-# except:
-#     print("No 'ToA' in the list")
-#     raise SystemExit
-
 try:
-    index = row1.index('#Trig-ToA[arb]')
-    time_new = np.array([row[index] for row in Data_tpx3_cent]) * 25/4096/1e6 + 912
-    p=1
+    index = row1.index('#ToTtotal[arb]')
+    tot_total = np.array([row[index] for row in Data_tpx3_cent])
 except:
-    print("No 'Trig-ToA' in the list")
-    index = row1.index('#ToA')
-    time_new = np.array([row[index] for row in Data_tpx3_cent]) * 25/4096/1e6
+    print("No 'ToT' in the list")
+    raise SystemExit
 
-# Define the bins with the step of 1.5625
-bins1 = int((time_new[-1] - time_new[0]) / 1.5625)
 
 # =============================================================================
 # Plot
@@ -53,10 +42,10 @@ bins1 = int((time_new[-1] - time_new[0]) / 1.5625)
 # Prepare figure and compute the histogram
 fig = plt.figure()
 plt.rcParams.update({'font.size': 22})
-plt.title("Shot %s: ToA" % shot)
-plt.xlabel("Time [ms]")
+plt.title("Shot %s: ToT" % shot)
+plt.xlabel("ToT [a.u.]")
 plt.ylabel("Hits [-]")
-a = plt.hist(time_new, bins1, (time_new[0], time_new[-1]), histtype='step', fill=False)
+a = plt.hist(tot_total, 1000, (0, 25000), histtype='step', fill=False)
 # Get rid off the noisy "ones" for an appropriate plot
 data = a[0]
 timee = a[1]
@@ -88,4 +77,4 @@ except:
 
 print("Time of execution: %s seconds" % (time.time() - start_time))
 fig.set_size_inches(20., 12., forward=True)
-plt.savefig('%s:ToA_plt_test.pdf' % shot)
+plt.savefig('%s:ToT_plt.pdf' % shot)
